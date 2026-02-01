@@ -1,0 +1,119 @@
+{
+  "task-1": {
+    "implementation": [
+      {
+        "How_is_it_connected_to_implementation": "Entry point for the application. Invokes the user export process by calling UserController.export_users_to_csv().",
+        "file_path": "src/main.py",
+        "id": "main_py_entrypoint",
+        "name": "main()",
+        "pseudo_code": "IF this script is run as main:\n    TRY\n        Call UserController.export_users_to_csv()\n    EXCEPT Exception as e\n        Log application error",
+        "type": "function"
+      },
+      {
+        "How_is_it_connected_to_implementation": "Coordinates the process of fetching users and writing them to a CSV file. Handles empty user lists and manages file writing.",
+        "file_path": "src/controller/user_controller.py",
+        "id": "user_controller_export_csv",
+        "name": "UserController.export_users_to_csv()",
+        "pseudo_code": "Call UserService.get_all_users()\nIF no users:\n    Log warning and return\nFOR each user:\n    Convert to flat dictionary\nGet CSV fieldnames from first user\nEnsure output directory exists\nTRY\n    Open CSV file for writing\n    Write header\n    Write all user rows\n    Log success\nEXCEPT Exception as e\n    Log error and raise",
+        "type": "function"
+      },
+      {
+        "How_is_it_connected_to_implementation": "Fetches raw user data from the repository and converts each record to a User domain object, handling errors for individual records.",
+        "file_path": "src/service/user_service.py",
+        "id": "user_service_get_all_users",
+        "name": "UserService.get_all_users()",
+        "pseudo_code": "Call UserRepository.fetch_users()\nFOR each user data in raw_users:\n    TRY\n        Create User object\n        Add to users list\n    EXCEPT Exception as e\n        Log warning and skip user\nReturn users list",
+        "type": "function"
+      },
+      {
+        "How_is_it_connected_to_implementation": "Makes HTTP GET request to the JSONPlaceholder API to retrieve user data. Handles request errors and returns parsed JSON.",
+        "file_path": "src/repository/user_repository.py",
+        "id": "user_repository_fetch_users",
+        "name": "UserRepository.fetch_users()",
+        "pseudo_code": "TRY\n    Make GET request to API_URL\n    Raise for HTTP errors\n    Return response as JSON\nEXCEPT RequestException as e\n    Log error and raise",
+        "type": "function"
+      },
+      {
+        "How_is_it_connected_to_implementation": "Flattens nested user data (address, company) into a single-level dictionary suitable for CSV output.",
+        "file_path": "src/domain/user.py",
+        "id": "user_to_flat_dict",
+        "name": "User.to_flat_dict()",
+        "pseudo_code": "Copy user data to flat\nIF 'address' in flat:\n    FOR each key, value in address:\n        IF value is dict:\n            FOR each subkey, subvalue in value:\n                Add to flat with composite key\n        ELSE:\n            Add to flat with composite key\n    Remove 'address' from flat\nIF 'company' in flat:\n    FOR each key, value in company:\n        Add to flat with composite key\n    Remove 'company' from flat\nReturn flat",
+        "type": "function"
+      }
+    ],
+    "missing_implementations": [
+      "No explicit downstream blockchain operation integration is present; the CSV export is implemented, but there is no code connecting this output to blockchain processes."
+    ]
+  },
+  "task-2": {
+    "implementation": [
+      {
+        "How_is_it_connected_to_implementation": "Defines the Hardhat project dependencies and scripts, establishing the blockchain development environment required for smart contract deployment and management.",
+        "file_path": "hardhat/package.json",
+        "id": "hardhat_project_setup",
+        "name": "Hardhat Project Initialization",
+        "pseudo_code": "Initialize npm project\nInstall Hardhat and dependencies\nConfigure scripts for contract deployment and testing",
+        "type": "function"
+      },
+      {
+        "How_is_it_connected_to_implementation": "Configures Hardhat for compiling, deploying, and testing smart contracts, specifying network and compiler settings.",
+        "file_path": "hardhat/hardhat.config.ts",
+        "id": "hardhat_config",
+        "name": "Hardhat Configuration",
+        "pseudo_code": "Import Hardhat plugins\nSet Solidity compiler version\nConfigure networks for deployment",
+        "type": "function"
+      },
+      {
+        "How_is_it_connected_to_implementation": "Implements the smart contract that mints tokens representing users, providing the blockchain logic for tokenization.",
+        "file_path": "hardhat/contracts/UserToken.sol",
+        "id": "user_token_contract",
+        "name": "UserToken",
+        "pseudo_code": "Define ERC721 contract\nFOR each user\n    Mint unique token with user hash",
+        "type": "function"
+      },
+      {
+        "How_is_it_connected_to_implementation": "Processes the CSV user data, hashes user information, and interacts with the UserToken contract to mint tokens for each user.",
+        "file_path": "hardhat/scripts/tokenizeUsers.ts",
+        "id": "tokenize_users_script",
+        "name": "tokenizeUsers",
+        "pseudo_code": "Read users.csv\nFOR each user in CSV\n    Hash user data\n    Call UserToken contract to mint token with hash",
+        "type": "function"
+      },
+      {
+        "How_is_it_connected_to_implementation": "Deploys the UserToken smart contract to the blockchain, making it available for tokenization operations.",
+        "file_path": "hardhat/scripts/deploy.ts",
+        "id": "deploy_script",
+        "name": "deploy",
+        "pseudo_code": "Compile contracts\nDeploy UserToken contract\nLog deployed contract address",
+        "type": "function"
+      },
+      {
+        "How_is_it_connected_to_implementation": "Provides the user data source for tokenization, which is read and processed by the tokenizeUsers script.",
+        "file_path": "hardhat/data/users.csv",
+        "id": "users_csv_data",
+        "name": "users.csv",
+        "pseudo_code": "CSV file containing user data\nEach row represents a user\nUsed as input for tokenization",
+        "type": "function"
+      },
+      {
+        "How_is_it_connected_to_implementation": "Tests the UserToken contract to ensure correct minting and representation of user tokens on the blockchain.",
+        "file_path": "hardhat/test/UserToken.test.ts",
+        "id": "user_token_test",
+        "name": "UserToken.test",
+        "pseudo_code": "Deploy UserToken contract\nMint token for test user\nAssert token ownership and metadata",
+        "type": "function"
+      }
+    ],
+    "missing_implementations": [
+      "No UI component exists for uploading or managing CSV user data.",
+      "No API endpoint exists to trigger tokenization from an external service.",
+      "No integration with external database or persistent storage for user-token mapping.",
+      "No service or function for error handling or validation of CSV data before tokenization."
+    ]
+  },
+  "task-3": {
+    "implementation": [],
+    "missing_implementations": []
+  }
+}
