@@ -1,0 +1,29 @@
+{
+  "name": "user-data-tokenization",
+  "version": "1.0.0",
+  "description": "Hardhat project to tokenize user data from CSV using keccak256 and mint unique tokens.",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "lint": "eslint ./scripts ./test ./contracts --ext .ts,.js",
+    "tokenize": "hardhat run scripts/tokenizeUsers.ts"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "@types/node": "^20.11.30",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "csv-parse": "^5.5.0",
+    "dotenv": "^16.4.5",
+    "eslint": "^8.56.0",
+    "hardhat": "^2.22.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "ethers": "^6.8.1"
+  }
+}
