@@ -1,3 +1,3 @@
 # laughing-guacamole
 
-Python program to read users info from JSONPlaceholder API, store the user info in csv. Create a hardhat project for each of the user data hash it with keccak256 and mint a token.
+Python program to read users info from JSONPlaceholder API, store the user info in csv. 
